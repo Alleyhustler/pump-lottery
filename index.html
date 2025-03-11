@@ -7,12 +7,14 @@
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Ranchers&display=swap" rel="stylesheet">
+
 </head>
 <body>
   <!-- Header -->
   <header>
     <div class="container">
-      <h1>Pump & Dump Lottery</h1>
+      <h1>Pump Lottery</h1>
       <button id="connectWallet" class="animate__animated animate__fadeIn">Connect Wallet</button>
     </div>
   </header>
@@ -20,8 +22,8 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="container">
-      <h2 class="animate__animated animate__fadeInDown">The Ultimate Degen Game</h2>
-      <p class="animate__animated animate__fadeIn animate__delay-1s">Vote to Pump or Dump. Win Big or Get Rekt.</p>
+      <h2 class="animate__animated animate__fadeInDown">Trenches Game</h2>
+      <p class="animate__animated animate__fadeIn animate__delay-1s">Vote to Pump or Dump. based on your votes, you can achieve a reward. Rewards will be out after each back ( 8 minutes)</p>
       <div class="stats animate__animated animate__fadeInUp animate__delay-2s">
         <div class="stat-item">
           <p>Current Price</p>
@@ -38,6 +40,28 @@
       </div>
     </div>
   </section>
+
+  <!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-content">
+      <!-- Project Image -->
+      <div class="project-image">
+        <img src="image-removebg-preview (14) (1).png" alt="Project Image"> 
+      </div>
+  
+      <!-- Buy Button -->
+      <a href="https://pump.fun/profile/G9A9xv6AcCC4vSzdMJgJzqKrBu4JJ8rRUJF1aEoXXTk" target="_blank">
+        <button id="buyButton" class="buy-button">Buy $LOTTERY</button>
+      </a>
+        
+      <!-- Social Links -->
+      <div class="social-links">
+        <a href="https://x.com/Pumplottery_" target="_blank" class="social-link">Twitter</a>
+        <a href="https://pump.fun/profile/G9A9xv6AcCC4vSzdMJgJzqKrBu4JJ8rRUJF1aEoXXTk" target="_blank" class="social-link">BUY</a>
+        <a href="https://t.me/pumplotteryy" target="_blank" class="social-link">Telegram</a>
+      </div>
+    </div>
+  </aside>
 
   <!-- Voting Section -->
   <section class="voting">
@@ -56,6 +80,10 @@
           <p>Pump: <span id="pumpVotes">0%</span></p>
           <p>Dump: <span id="dumpVotes">0%</span></p>
         </div>
+      </div>
+      <!-- Add the Claim Reward Button Here -->
+      <div class="claim-reward animate__animated animate__fadeIn animate__delay-3s">
+        <button id="claimRewardButton" class="claim-reward-btn">Claim Reward / 8 minutes</button>
       </div>
     </div>
   </section>

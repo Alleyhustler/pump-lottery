@@ -1,7 +1,7 @@
 // Constants
-const VOTE_DURATION = 60 * 60; // 1 hour in seconds
+const VOTE_DURATION = 60 * 8; // 1 hour in seconds
 const PRICE_UPDATE_INTERVAL = 5000; // Update price every 5 seconds
-const INITIAL_PRICE = 100; // Starting token price
+const INITIAL_PRICE = 0.00004; // Starting token price
 
 // State
 let countdownTime = VOTE_DURATION;
@@ -38,12 +38,15 @@ const priceChart = new Chart(ctx, {
   options: {
     scales: {
       y: {
-        beginAtZero: true,
+        beginAtZero: false, // Start from the minimum price
         grid: {
           color: '#333333',
         },
         ticks: {
           color: '#CCCCCC',
+          callback: function (value) {
+            return value.toFixed(5); // Display prices with 5 decimal places
+          },
         },
       },
       x: {
@@ -129,9 +132,19 @@ function simulatePriceDump() {
   updatePrice();
 }
 
+// Simulate Fake Price Fluctuations (Trending Upward)
+function simulatePriceFluctuation() {
+  const fluctuation = (Math.random() - 0.3) * 2; // Random fluctuation between -0.6% and +1.4%
+  currentPrice *= 1 + fluctuation / 100;
+  if (currentPrice < INITIAL_PRICE) {
+    currentPrice = INITIAL_PRICE; // Ensure price doesn't go below the starting price
+  }
+  updatePrice();
+}
+
 // Update Price Display
 function updatePrice() {
-  currentPriceElement.textContent = `$${currentPrice.toFixed(2)}`;
+  currentPriceElement.textContent = `$${currentPrice.toFixed(5)}`; // Display price with 5 decimal places
   const growthRate = ((currentPrice - INITIAL_PRICE) / INITIAL_PRICE) * 100;
   growthRateElement.textContent = `${growthRate.toFixed(2)}%`;
   updateChart();
@@ -206,5 +219,5 @@ connectWalletButton.addEventListener('click', connectWallet);
 
 // Initialize
 setInterval(updateCountdown, 1000);
-setInterval(updatePrice, PRICE_UPDATE_INTERVAL);
+setInterval(simulatePriceFluctuation, PRICE_UPDATE_INTERVAL); // Simulate price fluctuations
 updatePrice(); // Initial price update
