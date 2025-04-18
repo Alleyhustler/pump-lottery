@@ -1,6 +1,6 @@
 // Constants
 const VOTE_DURATION = 60 * 8; // 1 hour in seconds
-const PRICE_UPDATE_INTERVAL = 5000; // Update price every 5 seconds
+const PRICE_UPDATE_INTERVAL = 1000; // Changed from 5000 to 1000 (1 second updates)
 const INITIAL_PRICE = 0.00004; // Starting token price
 
 // State
@@ -33,19 +33,23 @@ const priceChart = new Chart(ctx, {
       borderColor: '#00FF88',
       tension: 0.4,
       fill: false,
+      pointRadius: 0, // Remove points for cleaner look with more data
     }]
   },
   options: {
+    animation: {
+      duration: 0, // Disable animation for faster updates
+    },
     scales: {
       y: {
-        beginAtZero: false, // Start from the minimum price
+        beginAtZero: false,
         grid: {
           color: '#333333',
         },
         ticks: {
           color: '#CCCCCC',
           callback: function (value) {
-            return value.toFixed(5); // Display prices with 5 decimal places
+            return value.toFixed(5);
           },
         },
       },
@@ -55,6 +59,7 @@ const priceChart = new Chart(ctx, {
         },
         ticks: {
           color: '#CCCCCC',
+          maxTicksLimit: 10, // Limit number of x-axis labels
         },
       },
     },
@@ -63,103 +68,24 @@ const priceChart = new Chart(ctx, {
         display: false,
       },
     },
+    responsiveAnimationDuration: 0, // Disable responsive animation
   },
 });
 
-// Functions
-
-// Update Countdown Timer
-function updateCountdown() {
-  const hours = Math.floor(countdownTime / 3600);
-  const minutes = Math.floor((countdownTime % 3600) / 60);
-  const seconds = countdownTime % 60;
-  countdownElement.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
-  if (countdownTime > 0) {
-    countdownTime--;
-  } else {
-    endVotingRound();
-  }
-}
-
-// End Voting Round
-function endVotingRound() {
-  isVotingActive = false;
-  const totalVotes = pumpVotes + dumpVotes;
-  if (totalVotes > 0) {
-    if (pumpVotes > dumpVotes) {
-      alert('Pump wins! Price will continue to rise.');
-      simulatePricePump();
-    } else {
-      alert('Dump wins! Early voters share profits.');
-      simulatePriceDump();
-    }
-  } else {
-    alert('No votes were cast. Price remains unchanged.');
-  }
-  resetVotingRound();
-}
-
-// Reset Voting Round
-function resetVotingRound() {
-  countdownTime = VOTE_DURATION;
-  pumpVotes = 0;
-  dumpVotes = 0;
-  isVotingActive = true;
-  updateVotes();
-}
-
-// Update Votes Display
-function updateVotes() {
-  const totalVotes = pumpVotes + dumpVotes;
-  const pumpPercentage = totalVotes > 0 ? Math.round((pumpVotes / totalVotes) * 100) : 0;
-  const dumpPercentage = totalVotes > 0 ? Math.round((dumpVotes / totalVotes) * 100) : 0;
-  pumpVotesElement.textContent = `${pumpPercentage}%`;
-  dumpVotesElement.textContent = `${dumpPercentage}%`;
-}
-
-// Simulate Price Pump
-function simulatePricePump() {
-  const pumpAmount = Math.random() * 20 + 10; // Random price increase between 10% and 30%
-  currentPrice *= 1 + pumpAmount / 100;
-  updatePrice();
-}
-
-// Simulate Price Dump
-function simulatePriceDump() {
-  const dumpAmount = Math.random() * 20 + 10; // Random price decrease between 10% and 30%
-  currentPrice *= 1 - dumpAmount / 100;
-  updatePrice();
-}
-
-// Simulate Fake Price Fluctuations (Trending Upward)
-function simulatePriceFluctuation() {
-  const fluctuation = (Math.random() - 0.3) * 2; // Random fluctuation between -0.6% and +1.4%
-  currentPrice *= 1 + fluctuation / 100;
-  if (currentPrice < INITIAL_PRICE) {
-    currentPrice = INITIAL_PRICE; // Ensure price doesn't go below the starting price
-  }
-  updatePrice();
-}
-
-// Update Price Display
-function updatePrice() {
-  currentPriceElement.textContent = `$${currentPrice.toFixed(5)}`; // Display price with 5 decimal places
-  const growthRate = ((currentPrice - INITIAL_PRICE) / INITIAL_PRICE) * 100;
-  growthRateElement.textContent = `${growthRate.toFixed(2)}%`;
-  updateChart();
-}
-
-// Update Chart
+// Update Chart function - modified to handle more frequent updates
 function updateChart() {
   const now = new Date();
-  const timeLabel = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const timeLabel = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+  
   priceChart.data.labels.push(timeLabel);
   priceChart.data.datasets[0].data.push(currentPrice);
-  if (priceChart.data.labels.length > 10) {
+  
+  // Show more data points but limit to a reasonable number
+  if (priceChart.data.labels.length > 30) { // Increased from 10 to 30
     priceChart.data.labels.shift();
     priceChart.data.datasets[0].data.shift();
   }
+  
   priceChart.update();
 }
 
