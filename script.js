@@ -1,7 +1,8 @@
 // Constants
 const VOTE_DURATION = 60 * 8; // 1 hour in seconds
-const PRICE_UPDATE_INTERVAL = 1000; // Update price every 1 second (changed from 5 seconds)
+const PRICE_UPDATE_INTERVAL = 500; // Update price every 0.5 seconds (faster updates)
 const INITIAL_PRICE = 0.00004; // Starting token price
+const CHART_HISTORY_LENGTH = 60; // Show last 60 data points (1 minute at 1 update per second)
 
 // State
 let countdownTime = VOTE_DURATION;
@@ -10,6 +11,7 @@ let dumpVotes = 0;
 let currentPrice = INITIAL_PRICE;
 let isVotingActive = true;
 let userAddress = null;
+let lastUpdateTime = Date.now();
 
 // DOM Elements
 const countdownElement = document.getElementById('countdown');
@@ -21,46 +23,65 @@ const pumpButton = document.getElementById('pumpButton');
 const dumpButton = document.getElementById('dumpButton');
 const connectWalletButton = document.getElementById('connectWallet');
 
+// Pre-initialize chart data with empty values
+const initialLabels = [];
+const initialData = [];
+const now = Date.now();
+
+for (let i = CHART_HISTORY_LENGTH - 1; i >= 0; i--) {
+  const time = new Date(now - i * PRICE_UPDATE_INTERVAL);
+  initialLabels.push(formatTime(time));
+  initialData.push(INITIAL_PRICE);
+}
+
 // Chart Setup
 const ctx = document.getElementById('priceChart').getContext('2d');
 const priceChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: [], // Time labels will be added dynamically
+    labels: initialLabels,
     datasets: [{
       label: 'Token Price',
-      data: [], // Price data will be added dynamically
+      data: initialData,
       borderColor: '#00FF88',
-      tension: 0.4,
+      borderWidth: 2,
+      tension: 0.1, // Less curve for faster rendering
       fill: false,
+      pointRadius: 0, // No points for better performance
     }]
   },
   options: {
     responsive: true,
+    maintainAspectRatio: false,
     animation: {
-      duration: 0 // Disable animation to make updates instant
+      duration: 0 // Disable all animations
+    },
+    hover: {
+      mode: null, // Disable hover effects
+      intersect: false
     },
     scales: {
       y: {
-        beginAtZero: false, // Start from the minimum price
+        beginAtZero: false,
         grid: {
           color: '#333333',
         },
         ticks: {
           color: '#CCCCCC',
-          callback: function (value) {
-            return value.toFixed(5); // Display prices with 5 decimal places
+          callback: function(value) {
+            return value.toFixed(5);
           },
         },
       },
       x: {
         grid: {
-          color: '#333333',
+          display: false,
         },
         ticks: {
           color: '#CCCCCC',
           maxRotation: 0,
           autoSkip: true,
+          autoSkipPadding: 20,
           maxTicksLimit: 10
         },
       },
@@ -70,19 +91,16 @@ const priceChart = new Chart(ctx, {
         display: false,
       },
       tooltip: {
-        mode: 'index',
-        intersect: false
+        enabled: false // Disable tooltips for better performance
       }
     },
-    interaction: {
-      mode: 'nearest',
-      axis: 'x',
-      intersect: false
-    }
   },
 });
 
-// Functions
+// Helper function to format time
+function formatTime(date) {
+  return `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+}
 
 // Update Countdown Timer
 function updateCountdown() {
@@ -136,50 +154,55 @@ function updateVotes() {
 
 // Simulate Price Pump
 function simulatePricePump() {
-  const pumpAmount = Math.random() * 20 + 10; // Random price increase between 10% and 30%
+  const pumpAmount = Math.random() * 20 + 10;
   currentPrice *= 1 + pumpAmount / 100;
   updatePrice();
 }
 
 // Simulate Price Dump
 function simulatePriceDump() {
-  const dumpAmount = Math.random() * 20 + 10; // Random price decrease between 10% and 30%
+  const dumpAmount = Math.random() * 20 + 10;
   currentPrice *= 1 - dumpAmount / 100;
   updatePrice();
 }
 
-// Simulate Fake Price Fluctuations (Trending Upward)
+// Simulate Price Fluctuations
 function simulatePriceFluctuation() {
-  const fluctuation = (Math.random() - 0.3) * 2; // Random fluctuation between -0.6% and +1.4%
-  currentPrice *= 1 + fluctuation / 100;
-  if (currentPrice < INITIAL_PRICE) {
-    currentPrice = INITIAL_PRICE; // Ensure price doesn't go below the starting price
+  const now = Date.now();
+  // Only update if enough time has passed
+  if (now - lastUpdateTime >= PRICE_UPDATE_INTERVAL) {
+    lastUpdateTime = now;
+    const fluctuation = (Math.random() - 0.3) * 2;
+    currentPrice *= 1 + fluctuation / 100;
+    if (currentPrice < INITIAL_PRICE) {
+      currentPrice = INITIAL_PRICE;
+    }
+    updatePrice();
   }
-  updatePrice();
 }
 
 // Update Price Display
 function updatePrice() {
-  currentPriceElement.textContent = `$${currentPrice.toFixed(5)}`; // Display price with 5 decimal places
+  currentPriceElement.textContent = `$${currentPrice.toFixed(5)}`;
   const growthRate = ((currentPrice - INITIAL_PRICE) / INITIAL_PRICE) * 100;
   growthRateElement.textContent = `${growthRate.toFixed(2)}%`;
   updateChart();
 }
 
-// Update Chart
+// Update Chart - Optimized version
 function updateChart() {
-  const now = new Date();
-  const timeLabel = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-  priceChart.data.labels.push(timeLabel);
-  priceChart.data.datasets[0].data.push(currentPrice);
-  
-  // Keep only the last 30 data points to prevent overcrowding
-  if (priceChart.data.labels.length > 30) {
+  // Shift the data arrays if they're full
+  if (priceChart.data.labels.length >= CHART_HISTORY_LENGTH) {
     priceChart.data.labels.shift();
     priceChart.data.datasets[0].data.shift();
   }
   
-  priceChart.update('none'); // 'none' prevents animation for faster updates
+  // Add new data point
+  priceChart.data.labels.push(formatTime(new Date()));
+  priceChart.data.datasets[0].data.push(currentPrice);
+  
+  // Perform the update
+  priceChart.update('none');
 }
 
 // Solana Wallet Connection
@@ -192,7 +215,6 @@ async function connectWallet() {
         userAddress = response.publicKey.toString();
         connectWalletButton.textContent = `Connected: ${userAddress.slice(0, 4)}...${userAddress.slice(-4)}`;
         connectWalletButton.disabled = true;
-        console.log('Wallet connected:', userAddress);
       } catch (error) {
         console.error('User denied wallet connection:', error);
       }
@@ -205,8 +227,6 @@ async function connectWallet() {
 }
 
 // Event Listeners
-
-// Voting Buttons
 pumpButton.addEventListener('click', () => {
   if (!userAddress) {
     alert('Please connect your wallet to vote.');
@@ -233,10 +253,12 @@ dumpButton.addEventListener('click', () => {
   }
 });
 
-// Wallet Connection
 connectWalletButton.addEventListener('click', connectWallet);
 
-// Initialize
+// Initialize with current price
+currentPriceElement.textContent = `$${INITIAL_PRICE.toFixed(5)}`;
+growthRateElement.textContent = '0.00%';
+
+// Start timers
 setInterval(updateCountdown, 1000);
-setInterval(simulatePriceFluctuation, PRICE_UPDATE_INTERVAL); // Simulate price fluctuations
-updatePrice(); // Initial price update
+setInterval(simulatePriceFluctuation, 100); // Check more frequently but only update when needed
