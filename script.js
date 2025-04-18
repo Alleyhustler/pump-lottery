@@ -1,6 +1,6 @@
 // Constants
 const VOTE_DURATION = 60 * 8; // 1 hour in seconds
-const PRICE_UPDATE_INTERVAL = 5000; // Update price every 5 seconds
+const PRICE_UPDATE_INTERVAL = 1000; // Update price every 1 second (changed from 5 seconds)
 const INITIAL_PRICE = 0.00004; // Starting token price
 
 // State
@@ -36,6 +36,10 @@ const priceChart = new Chart(ctx, {
     }]
   },
   options: {
+    responsive: true,
+    animation: {
+      duration: 0 // Disable animation to make updates instant
+    },
     scales: {
       y: {
         beginAtZero: false, // Start from the minimum price
@@ -55,6 +59,9 @@ const priceChart = new Chart(ctx, {
         },
         ticks: {
           color: '#CCCCCC',
+          maxRotation: 0,
+          autoSkip: true,
+          maxTicksLimit: 10
         },
       },
     },
@@ -62,7 +69,16 @@ const priceChart = new Chart(ctx, {
       legend: {
         display: false,
       },
+      tooltip: {
+        mode: 'index',
+        intersect: false
+      }
     },
+    interaction: {
+      mode: 'nearest',
+      axis: 'x',
+      intersect: false
+    }
   },
 });
 
@@ -153,14 +169,17 @@ function updatePrice() {
 // Update Chart
 function updateChart() {
   const now = new Date();
-  const timeLabel = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const timeLabel = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
   priceChart.data.labels.push(timeLabel);
   priceChart.data.datasets[0].data.push(currentPrice);
-  if (priceChart.data.labels.length > 10) {
+  
+  // Keep only the last 30 data points to prevent overcrowding
+  if (priceChart.data.labels.length > 30) {
     priceChart.data.labels.shift();
     priceChart.data.datasets[0].data.shift();
   }
-  priceChart.update();
+  
+  priceChart.update('none'); // 'none' prevents animation for faster updates
 }
 
 // Solana Wallet Connection
