@@ -1,7 +1,9 @@
 // Constants
-const VOTE_DURATION = 60 * 8; // 1 hour in seconds
+// Constants
+const VOTE_DURATION = 60 * 8; // 8 minutes in seconds
 const INITIAL_PRICE = 0.00004; // Starting token price
-const CHART_HISTORY_LENGTH = 60; // Show last 60 data points (1 minute at 1 update per second)
+const CHART_HISTORY_LENGTH = 60; // Show last 60 data points
+const PRICE_UPDATE_INTERVAL = 1000; // 1 second between price updates in milliseconds
 
 // State
 let countdownTime = VOTE_DURATION;
@@ -166,6 +168,7 @@ function simulatePriceDump() {
 }
 
 // Simulate Price Fluctuations
+// Simulate Price Fluctuations
 function simulatePriceFluctuation() {
   const now = Date.now();
   // Only update if enough time has passed
@@ -173,8 +176,8 @@ function simulatePriceFluctuation() {
     lastUpdateTime = now;
     const fluctuation = (Math.random() - 0.3) * 2;
     currentPrice *= 1 + fluctuation / 100;
-    if (currentPrice < INITIAL_PRICE) {
-      currentPrice = INITIAL_PRICE;
+    if (currentPrice < INITIAL_PRICE * 0.5) {  // Prevent price from going too low
+      currentPrice = INITIAL_PRICE * 0.5;
     }
     updatePrice();
   }
@@ -190,17 +193,19 @@ function updatePrice() {
 
 // Update Chart - Optimized version
 function updateChart() {
+  // Add new data point
+  const currentTime = formatTime(new Date());
+  
   // Shift the data arrays if they're full
   if (priceChart.data.labels.length >= CHART_HISTORY_LENGTH) {
     priceChart.data.labels.shift();
     priceChart.data.datasets[0].data.shift();
   }
   
-  // Add new data point
-  priceChart.data.labels.push(formatTime(new Date()));
+  priceChart.data.labels.push(currentTime);
   priceChart.data.datasets[0].data.push(currentPrice);
   
-  // Perform the update
+  // Update chart with 'none' animation mode for better performance
   priceChart.update('none');
 }
 
@@ -259,5 +264,6 @@ currentPriceElement.textContent = `$${INITIAL_PRICE.toFixed(5)}`;
 growthRateElement.textContent = '0.00%';
 
 // Start timers
+// Start timers
 setInterval(updateCountdown, 1000);
-setInterval(simulatePriceFluctuation, 100); // Check more frequently but only update when needed
+setInterval(simulatePriceFluctuation, PRICE_UPDATE_INTERVAL); // Use the constant for consistency
