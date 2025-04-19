@@ -1,5 +1,5 @@
 // Constants
-const VOTE_DURATION = 60 * 60; // 1 hour in seconds (was previously 60 * 8)const PRICE_UPDATE_INTERVAL = 500; // Update price every 0.5 seconds (faster updates)
+const VOTE_DURATION = 60 * 8; // 1 hour in seconds
 const INITIAL_PRICE = 0.00004; // Starting token price
 const CHART_HISTORY_LENGTH = 60; // Show last 60 data points (1 minute at 1 update per second)
 
