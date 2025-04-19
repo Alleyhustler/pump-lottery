@@ -14,6 +14,18 @@ let userAddress = null;
 let lastUpdateTime = Date.now();
 let priceChart = null;
 
+// DOM element references
+let countdownElement;
+let currentPriceElement;
+let growthRateElement;
+let pumpVotesElement; 
+let dumpVotesElement;
+let pumpButton;
+let dumpButton;
+let connectWalletButton;
+let chartCanvas;
+let claimRewardButton;
+
 // Helper function to safely get DOM elements
 function getElement(id) {
   const element = document.getElementById(id);
@@ -26,7 +38,7 @@ function getElement(id) {
 
 // Helper function to format time
 function formatTime(date) {
-  return `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+  return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
 }
 
 // Update Countdown Timer
@@ -77,8 +89,8 @@ function updateVotes() {
   if (!pumpVotesElement || !dumpVotesElement) return;
   
   const totalVotes = pumpVotes + dumpVotes;
-  const pumpPercentage = totalVotes > 0 ? Math.round((pumpVotes / totalVotes) * 100) : 0;
-  const dumpPercentage = totalVotes > 0 ? Math.round((dumpVotes / totalVotes) * 100) : 0;
+  const pumpPercentage = totalVotes > 0 ? Math.round((pumpVotes / totalVotes) * 100) : 50;
+  const dumpPercentage = totalVotes > 0 ? Math.round((dumpVotes / totalVotes) * 100) : 50;
   pumpVotesElement.textContent = `${pumpPercentage}%`;
   dumpVotesElement.textContent = `${dumpPercentage}%`;
   
@@ -139,7 +151,10 @@ function updatePrice() {
 
 // Update Chart - Optimized version
 function updateChart() {
-  if (!priceChart) return;
+  if (!priceChart || !priceChart.data) {
+    console.error('Price chart or chart data is not available');
+    return;
+  }
   
   const currentTime = formatTime(new Date());
   
@@ -152,8 +167,12 @@ function updateChart() {
   priceChart.data.labels.push(currentTime);
   priceChart.data.datasets[0].data.push(currentPrice);
   
-  // Update chart with 'none' animation mode for better performance
-  priceChart.update('none');
+  try {
+    // Update chart with 'none' animation mode for better performance
+    priceChart.update('none');
+  } catch (error) {
+    console.error('Error updating chart:', error);
+  }
 }
 
 // Solana Wallet Connection
@@ -211,21 +230,29 @@ function handleDumpVote() {
 
 // Initialize chart with empty data
 function initializeChart(chartCanvas) {
-  if (!chartCanvas) return null;
-  
-  // Pre-initialize chart data with empty values
-  const initialLabels = [];
-  const initialData = [];
-  const now = Date.now();
-
-  for (let i = CHART_HISTORY_LENGTH - 1; i >= 0; i--) {
-    const time = new Date(now - i * PRICE_UPDATE_INTERVAL);
-    initialLabels.push(formatTime(time));
-    initialData.push(INITIAL_PRICE);
+  if (!chartCanvas) {
+    console.error('Chart canvas element not found');
+    return null;
   }
-
+  
   try {
+    // Pre-initialize chart data with empty values
+    const initialLabels = [];
+    const initialData = [];
+    const now = Date.now();
+
+    for (let i = CHART_HISTORY_LENGTH - 1; i >= 0; i--) {
+      const time = new Date(now - i * PRICE_UPDATE_INTERVAL);
+      initialLabels.push(formatTime(time));
+      initialData.push(INITIAL_PRICE);
+    }
+
     const ctx = chartCanvas.getContext('2d');
+    if (!ctx) {
+      console.error('Could not get 2D context from canvas');
+      return null;
+    }
+
     return new Chart(ctx, {
       type: 'line',
       data: {
@@ -292,28 +319,36 @@ function initializeChart(chartCanvas) {
   }
 }
 
+// Handle claim reward button click
+function handleClaimReward() {
+  if (!userAddress) {
+    alert('Please connect your wallet to claim rewards.');
+    return;
+  }
+  alert('Rewards can be claimed after each voting round ends.');
+}
+
 // Main initialization function
 function initializeApp() {
-  // Get all necessary DOM elements
-  const countdownElement = getElement('countdown');
-  const currentPriceElement = getElement('currentPrice');
-  const growthRateElement = getElement('growthRate');
-  const pumpVotesElement = getElement('pumpVotes');
-  const dumpVotesElement = getElement('dumpVotes');
-  const pumpButton = getElement('pumpButton');
-  const dumpButton = getElement('dumpButton');
-  const connectWalletButton = getElement('connectWallet');
-  const chartCanvas = getElement('priceChart');
-  const claimRewardButton = getElement('claimRewardButton');
+  console.log('Initializing app...');
   
-  // Check if critical elements are missing
-  if (!chartCanvas || !countdownElement || !currentPriceElement) {
-    console.error('Critical DOM elements are missing. App initialization aborted.');
+  // Get all necessary DOM elements
+  chartCanvas = getElement('priceChart');
+  
+  if (!chartCanvas) {
+    console.error('Critical DOM element "priceChart" is missing. App initialization aborted.');
     return;
   }
   
   // Initialize chart
+  console.log('Initializing chart...');
   priceChart = initializeChart(chartCanvas);
+  
+  if (!priceChart) {
+    console.error('Failed to initialize chart. App initialization continuing without chart functionality.');
+  } else {
+    console.log('Chart initialized successfully');
+  }
   
   // Set initial values
   if (currentPriceElement) {
@@ -338,34 +373,41 @@ function initializeApp() {
   }
   
   if (claimRewardButton) {
-    claimRewardButton.addEventListener('click', function() {
-      if (!userAddress) {
-        alert('Please connect your wallet to claim rewards.');
-        return;
-      }
-      alert('Rewards can be claimed after each voting round ends.');
-    });
+    claimRewardButton.addEventListener('click', handleClaimReward);
   }
   
   // Start timers
+  console.log('Starting timers...');
   setInterval(updateCountdown, 1000);
   setInterval(simulatePriceFluctuation, PRICE_UPDATE_INTERVAL);
   
   console.log('Pump & Dump Lottery application initialized successfully!');
 }
 
-// Initialize the application when DOM content is loaded
-document.addEventListener('DOMContentLoaded', initializeApp);
-
-// Global scope references for DOM elements
-let countdownElement, currentPriceElement, growthRateElement, 
-    pumpVotesElement, dumpVotesElement;
-
-// Set these variables once the DOM is loaded
+// Load everything when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM content loaded');
+  
+  // Get all DOM elements
   countdownElement = getElement('countdown');
   currentPriceElement = getElement('currentPrice');
   growthRateElement = getElement('growthRate');
   pumpVotesElement = getElement('pumpVotes');
   dumpVotesElement = getElement('dumpVotes');
+  pumpButton = getElement('pumpButton');
+  dumpButton = getElement('dumpButton');
+  connectWalletButton = getElement('connectWallet');
+  chartCanvas = getElement('priceChart');
+  claimRewardButton = getElement('claimRewardButton');
+  
+  // Check if critical elements exist
+  if (!chartCanvas || !countdownElement || !currentPriceElement) {
+    console.error('Critical DOM elements are missing. Check your HTML structure.');
+  }
+  
+  // Initialize the application
+  initializeApp();
+  
+  // Set initial vote display
+  updateVotes();
 });
