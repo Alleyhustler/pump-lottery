@@ -1,341 +1,358 @@
 /* Base Styles */
 :root {
-    --primary-color: #131313;
-    --secondary-color: #1e1e1e;
-    --accent-color: #ff3e3e;
-    --text-color: #ffffff;
-    --text-secondary: #b0b0b0;
-    --pump-color: #00c853;
-    --dump-color: #ff3d00;
-    --border-color: #333333;
-  }
-  
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: "Ranchers", sans-serif;
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    line-height: 1.5;
-  }
-  
-  .container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-  }
-  
-  /* Header */
-  header {
-    background-color: var(--secondary-color);
-    border-bottom: 1px solid var(--border-color);
-    padding: 15px 0;
-  }
-  
-  header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  header h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  #connectWallet {
-    background-color: var(--accent-color);
-    color: var(--text-color);
-    border: none;
-    padding: 8px 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-family: "Ranchers", sans-serif;
-    transition: background-color 0.2s;
-  }
-  
-  #connectWallet:hover {
-    background-color: #ff5252;
-  }
-  
-  /* Hero Section */
-  .hero {
-    background-color: var(--primary-color);
-    padding: 25px 0;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .hero h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  .hero p {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-  }
-  
-  .stats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 15px;
-  }
-  
-  .stat-item {
-    flex: 1;
-    min-width: 180px;
-    background-color: var(--secondary-color);
-    padding: 15px;
-    border-left: 3px solid var(--accent-color);
-  }
-  
-  .stat-item p {
-    font-size: 0.85rem;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .stat-item span {
-    font-size: 1.5rem;
-    font-weight: 700;
-  }
-  
-  /* Voting Section */
-  .voting {
-    background-color: var(--secondary-color);
-    padding: 25px 0;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .voting h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .vote-buttons {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-  
-  .vote-buttons button {
-    flex: 1;
-    padding: 12px 0;
-    font-size: 1.2rem;
-    font-family: "Ranchers", sans-serif;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: filter 0.2s;
-  }
-  
-  .vote-buttons button:hover {
-    filter: brightness(1.1);
-  }
-  
-  /* Claim Reward Button */
-.claim-reward {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .claim-reward-btn {
-    padding: 12px 24px;
-    font-family: "Ranchers", sans-serif;
-    font-size: 1.2rem;
-    font-weight: 600;
-    background-color: #4CAF50; /* Green color for reward */
-    color: white;
-    border: none;
-    border-radius: 0px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: background-color 0.2s;
-  }
-  
-  .claim-reward-btn:hover {
-    background-color: #45a049; /* Darker green on hover */
-  }
-  
-  .pump {
-    background-color: var(--pump-color);
-    color: #ffffff;
-  }
-  
-  .dump {
-    background-color: var(--dump-color);
-    color: #ffffff;
-  }
-  
-  .vote-status {
-    margin-top: 15px;
-  }
-  
-  .vote-progress {
-    height: 10px;
-    display: flex;
-    margin-bottom: 10px;
-  }
-  
-  .progress-bar {
-    height: 100%;
-  }
-  
-  .pump-progress {
-    background-color: var(--pump-color);
-  }
-  
-  .dump-progress {
-    background-color: var(--dump-color);
-  }
-  
-  .vote-percentages {
-    display: flex;
-    justify-content: space-between;
-    font-weight: 500;
-  }
-  
-  /* Price History Section */
-  .history {
-    background-color: var(--primary-color);
-    padding: 25px 0;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .history h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  #priceChart {
-    width: 100%;
-    height: 300px;
-  }
-  
-  /* Footer */
-  footer {
-    background-color: var(--secondary-color);
-    padding: 15px 0;
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-  }
-  
-  footer p:first-child {
-    margin-bottom: 5px;
-  }
-  
-  /* Responsive Adjustments */
-  @media (max-width: 768px) {
-    .hero h2 {
-      font-size: 2rem;
-    }
-  
-    .stats {
-      flex-direction: column;
-    }
-  
-    .vote-buttons {
-      flex-direction: column;
-    }
-  }
+  --primary-color: #131313;
+  --secondary-color: #1e1e1e;
+  --accent-color: #ff3e3e;
+  --text-color: #ffffff;
+  --text-secondary: #b0b0b0;
+  --pump-color: #00c853;
+  --dump-color: #ff3d00;
+  --border-color: #333333;
+}
 
-  /* Sidebar */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Ranchers", sans-serif;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  line-height: 1.5;
+  margin-left: 250px; /* Add margin to accommodate the sidebar */
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Header */
+header {
+  background-color: var(--secondary-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 15px 0;
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#connectWallet {
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  border: none;
+  padding: 8px 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: "Ranchers", sans-serif;
+  transition: background-color 0.2s;
+}
+
+#connectWallet:hover {
+  background-color: #ff5252;
+}
+
+/* Hero Section */
+.hero {
+  background-color: var(--primary-color);
+  padding: 25px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.hero h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 180px;
+  background-color: var(--secondary-color);
+  padding: 15px;
+  border-left: 3px solid var(--accent-color);
+}
+
+.stat-item p {
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-item span {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Voting Section */
+.voting {
+  background-color: var(--secondary-color);
+  padding: 25px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.voting h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.vote-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.vote-buttons button {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 1.2rem;
+  font-family: "Ranchers", sans-serif;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: filter 0.2s;
+}
+
+.vote-buttons button:hover {
+  filter: brightness(1.1);
+}
+
+/* Claim Reward Button */
+.claim-reward {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.claim-reward-btn {
+  padding: 12px 24px;
+  font-family: "Ranchers", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background-color: #4CAF50; /* Green color for reward */
+  color: white;
+  border: none;
+  border-radius: 0px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background-color 0.2s;
+}
+
+.claim-reward-btn:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.pump {
+  background-color: var(--pump-color);
+  color: #ffffff;
+}
+
+.dump {
+  background-color: var(--dump-color);
+  color: #ffffff;
+}
+
+.vote-status {
+  margin-top: 15px;
+}
+
+.vote-progress {
+  height: 10px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+}
+
+.pump-progress {
+  background-color: var(--pump-color);
+}
+
+.dump-progress {
+  background-color: var(--dump-color);
+}
+
+.vote-percentages {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+}
+
+/* Price History Section */
+.history {
+  background-color: var(--primary-color);
+  padding: 25px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.history h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#priceChart {
+  width: 100%;
+  height: 300px;
+  background-color: rgba(30, 30, 30, 0.5); /* Add subtle background */
+  border: 1px solid var(--border-color); /* Add border */
+  border-radius: 2px; /* Slight border radius */
+}
+
+/* Footer */
+footer {
+  background-color: var(--secondary-color);
+  padding: 15px 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+footer p:first-child {
+  margin-bottom: 5px;
+}
+
+/* Sidebar */
 .sidebar {
-    width: 250px;
-    background-color: var(--secondary-color);
-    padding: 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    border-right: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 250px;
+  background-color: var(--secondary-color);
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000; /* Ensure sidebar appears above other content */
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Project Image */
+.project-image img {
+  width: 100%;
+  max-width: 150px;
+  border-radius: 10px;
+}
+
+/* Buy Button */
+.buy-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-family: "Ranchers", sans-serif;
+  background-color: #00FF88;
+  color: #000;
+  border: none;
+  border-radius: 0px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background-color 0.2s;
+}
+
+.buy-button:hover {
+  background-color: #00cc70;
+}
+
+/* Social Links */
+.social-links {
+  display: flex;
+  flex-direction: column; /* Stack links vertically */
+  gap: 10px; /* Space between links */
+  align-items: center; /* Center-align links */
+}
+
+.social-link {
+  color: #00FF88; /* Green color for links */
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.social-link:hover {
+  color: #00cc70; /* Darker green on hover */
+  text-decoration: underline; /* Optional: Add underline on hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  body {
+    margin-left: 0; /* Remove sidebar margin on small screens */
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 10px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
   }
   
   .sidebar-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
   }
   
-  /* Project Image */
   .project-image img {
-    width: 100%;
-    max-width: 150px;
-    border-radius: 10px;
+    max-width: 100px;
   }
   
-  /* Buy Button */
-  .buy-button {
-    padding: 12px 24px;
-    font-size: 1rem;
-    font-family: "Ranchers", sans-serif;
-    background-color: #00FF88;
-    color: #000;
-    border: none;
-    border-radius: 0px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: background-color 0.2s;
-    font-family: "Ranchers", sans-serif;
+  .hero h2 {
+    font-size: 2rem;
+  }
 
+  .stats {
+    flex-direction: column;
   }
-  
-  .buy-button:hover {
-    background-color: #00cc70;
+
+  .vote-buttons {
+    flex-direction: column;
   }
-  
-/* Social Links */
-.social-links {
-    display: flex;
-    flex-direction: column; /* Stack links vertically */
-    gap: 10px; /* Space between links */
-    align-items: center; /* Center-align links */
-  }
-  
-  .social-link {
-    color: #00FF88; /* Green color for links */
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: color 0.2s;
-  }
-  
-  .social-link:hover {
-    color: #00cc70; /* Darker green on hover */
-    text-decoration: underline; /* Optional: Add underline on hover */
-  }
-  
-  /* Adjust Main Content for Sidebar */
-  body {
-    margin-left: 250px; /* Add margin to accommodate the sidebar */
-  }
-  
-  header, .hero, .voting, .history, footer {
-    margin-left: 0; /* Ensure content doesn't overlap with the sidebar */
-  }
+}
