@@ -216,11 +216,7 @@ header h1 {
 }
 
 /* Price History Section */
-.history {
-  background-color: var(--primary-color);
-  padding: 25px 0;
-  border-bottom: 1px solid var(--border-color);
-}
+
 
 .history h3 {
   font-size: 1.5rem;
@@ -230,11 +226,29 @@ header h1 {
 }
 
 #priceChart {
-  width: 100%;
-  height: 300px;
-  background-color: rgba(30, 30, 30, 0.5); /* Add subtle background */
-  border: 1px solid var(--border-color); /* Add border */
-  border-radius: 2px; /* Slight border radius */
+  width: 100% !important;
+  height: 300px !important;
+  max-width: 100%;
+  max-height: 300px;
+  background-color: rgba(30, 30, 30, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  display: block;
+}
+
+/* Add this new class to your styles.css */
+.history {
+  background-color: var(--primary-color);
+  padding: 25px 0;
+  border-bottom: 1px solid var(--border-color);
+  height: auto;
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.history .container {
+  height: auto;
+  position: relative;
 }
 
 /* Footer */
